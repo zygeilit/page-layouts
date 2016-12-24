@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+
+    <style>
+        .container {
+            /*padding-left: 250px;*/
+            /*padding-right: 300px;*/
+        }
+        .container::after {
+            content: '\20';
+            display: table;
+            clear: both;
+        }
+
+        .left {
+            background-color: lime;
+            height: 500px;
+            width: 250px;
+            margin-left: -100%;
+            /*position: relative;*/
+            /*left: -250px;*/
+        }
+        .main {
+            background-color: #cccccc;
+            height: 500px;
+            width: 100%;
+        }
+        .right {
+            background-color: yellow;
+            width: 300px;
+            height: 500px;
+            margin-left: -300px;
+        }
+        .col {
+            float: left;
+        }
+
+        .content{
+            margin: 0 300px 0 250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+            <div class="main col">
+                <div class="content">
+                    这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.这是一个main.
+                </div>
+                </div>
+            <div class="left col">
+                这是一个sidebar.这是一个sidebar.这是一个sidebar.这是一个sidebar.这是一个sidebar.这是一个sidebar.这是一个sidebar.这是一个sidebar.
+                这是一个sidebar.这是一个sidebar.这是一个sidebar.
+            </div>
+            <div class="right col">
+                这是一个right.这是一个right.这是一个right.这是一个right.这是一个right.这是一个right.这是一个right.这是一个right.这是一个right.这是一个right.
+                这是一个right.这是一个right.这是一个right.这是一个right.这是一个right.这是一个right.
+            </div>
+
+    </div>
+</body>
+</html>
