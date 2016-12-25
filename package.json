@@ -1,0 +1,9 @@
+{
+    "author": "zhangyue",
+    "description": "home app",
+    "name": "home",
+    "version": "0.0.1",
+    "dependencies": {
+        "httpdispatcher": "^2.0.1"
+    }
+}

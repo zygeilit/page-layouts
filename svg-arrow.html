@@ -2,10 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no" name="viewport" />
+
     <title>svg</title>
     <style>
         * { margin: 0; padding: 0;}
-
+        body {
+            overflow: hidden;
+            position: fixed;
+            font-size: 13px;
+        }
         .container {
             padding: 4vmax;
         }
@@ -26,6 +33,7 @@
             text-align: center;
             border: 2px solid #cccccc;
             border-radius: 999999px;
+            font-size: 100%;
         }
 
         .hovered {
@@ -35,105 +43,109 @@
 </head>
 <body>
 
-    <svg id="svg1"
-         x="0" y="0"
-         width="999px" height="999px"
-         viewBox="0 0 999 999"
-         style="position: absolute; z-index: -999">
-    </svg>
+<svg id="svg1"
+     x="0" y="0"
+     width="999px" height="999px"
+     viewBox="0 0 999 999"
+     style="position: absolute; z-index: -999">
+</svg>
 
-    <div class="container">
-        <span id="s" class="startPoint item">按住并拖动</span>
-        <span id="e" class="endPoint item">连线到这里</span>
-    </div>
+<div class="container">
+    <span id="s" class="startPoint item">按住并拖动</span>
+    <span id="e" class="endPoint item">连线到这里</span>
+</div>
 
-    <script>
+<script>
 
-        var ct = function(tagName) { return document.createElementNS('http://www.w3.org/2000/svg', tagName); }
+    var ct = function(tagName) { return document.createElementNS('http://www.w3.org/2000/svg', tagName); }
 
-        var svgContaienr = document.querySelector('#svg1');
+    var getElementAcc = function(x, y, id) {
+        var a = document.querySelector('#' + id);
+        if(a) return a;
 
-        // 起始元素的位置
-        var s = document.getElementById('s');
-        var sPosition = s.getBoundingClientRect();
-        var sY = sPosition.bottom - sPosition.height/2;
-        var sX = sPosition.right;
+        var circle = ct('circle');
+        circle.setAttribute('id', id);
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        circle.setAttribute('r', 6);
+        circle.setAttribute('style', 'stroke: rgba(0, 0, 0, .4); fill: rgba(0, 0, 0, .2); z-index: 1;');
+        return circle;
+    }
 
-        // 目标的位置
-        var e = document.getElementById('e');
-        var ePosition = e.getBoundingClientRect();
-        var eY = ePosition.bottom - ePosition.height/2;
-        var eX = ePosition.left;
+    var svgContaienr = document.querySelector('#svg1');
 
-        s.addEventListener("touchstart", function(e) {
-            // console.log(e.changedTouches[0].pageX + ': ' + e.changedTouches[0].pageY);
+    // 起始元素的位置
+    var s = document.getElementById('s');
+    var sPosition = s.getBoundingClientRect();
+    var sY = sPosition.bottom - sPosition.height/2;
+    var sX = sPosition.right;
 
-            this.classList.add('hovered');
+    // 目标的位置
+    var e = document.getElementById('e');
+    var ePosition = e.getBoundingClientRect();
+    var eY = ePosition.bottom - ePosition.height/2;
+    var eX = ePosition.left;
 
-            svgX = e.changedTouches[0].pageX;
-            svgY = e.changedTouches[0].pageY
+    s.addEventListener("touchstart", function(e) {
+        // console.log(e.changedTouches[0].pageX + ': ' + e.changedTouches[0].pageY);
 
-            // 线
-            arrowPath = ct('line');
-            arrowPath.setAttribute('x1', sX);
-            arrowPath.setAttribute('y1', sY);
-            arrowPath.setAttribute('x2', svgX);
-            arrowPath.setAttribute('y2', svgY);
-            arrowPath.setAttribute('style', 'stroke: black;');
+        this.classList.add('hovered');
 
-            var circle = ct('circle');
-            circle.setAttribute('cx', sX);
-            circle.setAttribute('cy', sY);
-            circle.setAttribute('r', 6);
-            circle.setAttribute('style', 'stroke: rgba(0, 0, 0, .4); fill: rgba(0, 0, 0, .2); z-index: 1;');
+        svgX = e.changedTouches[0].pageX;
+        svgY = e.changedTouches[0].pageY
 
+        // 线
+        arrowPath = ct('line');
+        arrowPath.setAttribute('x1', sX);
+        arrowPath.setAttribute('y1', sY);
+        arrowPath.setAttribute('x2', svgX);
+        arrowPath.setAttribute('y2', svgY);
+        arrowPath.setAttribute('style', 'stroke: black;');
+
+        var circle = getElementAcc(sX, sY, 'startCircle');
+
+        svgContaienr.appendChild(circle);
+        svgContaienr.appendChild(arrowPath);
+
+    }, false)
+
+    s.addEventListener("touchend", function() {
+        this.classList.remove('hovered');
+        e.classList.remove('hovered');
+        if(!connected) arrowPath.parentNode.removeChild(arrowPath);
+    }, false)
+
+    s.addEventListener("touchcancel", function() {
+        this.classList.remove('hovered');
+        e.classList.remove('hovered');
+        if(!connected) arrowPath.parentNode.removeChild(arrowPath);
+    }, false);
+
+    s.addEventListener("touchmove", function(e) {
+
+        var currentX = e.changedTouches[0].pageX;
+        var currentY = e.changedTouches[0].pageY;
+        var hoveredDom = document.elementFromPoint(currentX, currentY);
+
+        // 手指移动到 目标元素上了
+        if(hoveredDom.classList.contains('endPoint')) {
+            connected = true;
+            hoveredDom.classList.add('hovered');
+
+            var circle = getElementAcc(eX, eY, 'targetCircle');
             svgContaienr.appendChild(circle);
-            svgContaienr.appendChild(arrowPath);
 
-        }, false)
+            arrowPath.setAttribute('x2', eX);
+            arrowPath.setAttribute('y2', eY);
+        } else {
+            connected = false;
+            arrowPath.setAttribute('x2', currentX);
+            arrowPath.setAttribute('y2', currentY);
+            hoveredDom.classList.remove('hovered');
+        }
+    }, false);
 
-        s.addEventListener("touchend", function(e) {
-            this.classList.remove('hovered')
-        }, false)
-
-        s.addEventListener("touchcancel", function(e) {
-            this.classList.remove('hovered')
-        }, false);
-
-        s.addEventListener("touchmove", function(e) {
-
-            var currentX = e.changedTouches[0].pageX;
-            var currentY = e.changedTouches[0].pageY;
-            var hoveredDom = document.elementFromPoint(currentX, currentY);
-
-            // 手指移动到 目标元素上了
-            if(hoveredDom.classList.contains('endPoint')) {
-                hoveredDom.classList.add('hovered');
-
-                if(document.querySelector('#targetCircle')) {
-                    // 已经有目标元素的 锚点了
-                } else {
-                    var circle = ct('circle');
-                    circle.setAttribute('id', 'targetCircle');
-                    circle.setAttribute('cx', eX);
-                    circle.setAttribute('cy', eY);
-                    circle.setAttribute('r', 6);
-                    circle.setAttribute('style', 'stroke: rgba(0, 0, 0, .4); fill: rgba(0, 0, 0, .2); z-index: 1;');
-                    svgContaienr.appendChild(circle);
-                }
-
-                arrowPath.setAttribute('x2', eX);
-                arrowPath.setAttribute('y2', eY);
-            }else {
-
-                arrowPath.setAttribute('x2', currentX);
-                arrowPath.setAttribute('y2', currentY);
-                return false;
-                hoveredDom.classList.remove('hovered');
-            }
-        }, false);
-
-    </script>
+</script>
 
 </body>
 </html>
