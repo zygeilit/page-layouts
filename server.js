@@ -10,9 +10,9 @@ var serveStatic = require('serve-static')
 var port = 8080;
 
 // 承载页
-dispatcher.onGet('/', function(req, res) {
+dispatcher.onGet('/flow', function(req, res) {
     res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-cache' });
-    fs.readFile('./app/index.html', null, function(error, data){
+    fs.readFile('./flow2-2.html', null, function(error, data){
         if(error) {
             res.writeHead(404);
             res.write('File not fount!');
@@ -25,7 +25,7 @@ dispatcher.onGet('/', function(req, res) {
 
 dispatcher.onGet('/svg-arrow', function(req, res) {
     res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-cache' });
-    fs.readFile('./app/svg-arrow.html', null, function(error, data){
+    fs.readFile('./svg-arrow.html', null, function(error, data){
         if(error) {
             res.writeHead(404);
             res.write('File not fount!');
