@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    .container {
+      background: #cccccc;
+      width: 100%;
+    }
+    .col {
+      width: 100%;
+    }
+    .left {
+      background: red;
+      top: 30px;
+    }
+    .main {
+      background: blue;
+    }
+    .right {
+      background: yellow;
+      height: 200px;
+      position: absolute;
+      top: 100px;
+    }
+    .right-inner-div {
+      height: 24px;
+      background-color: green;
+      position: absolute;
+      width: 90%;
+    }
+    .right-inner-div-1 {
+      height: 46px;
+      background-color: black;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left col">
+      这是一个main.这是一个main.这是一个main.
+    </div>
+    <div class="main col">
+      这是一个main.这是一个main.这是一个main.这是一个main
+    </div>
+    <div class="col right">
+      <div>
+        这是一个main.这是一个main.这是一个main.这是一个main
+      </div>
+      <div class="right-inner-div"></div>
+      <div class="right-inner-div-1"></div>
+    </div>
+  </div>
+</body>
+</html>
